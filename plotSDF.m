@@ -28,6 +28,7 @@ fa("F",  ["sz", "color"]) = {0.5, c(5, :)};
 fa("Cl", ["sz", "color"]) = {0.7, c(5, :)};
 fa("S",  ["sz", "color"]) = {0.6, c(3, :)};
 fa("I",  ["sz", "color"]) = {0.6, c(4, :)};
+fa("Si", ["sz", "color"]) = {0.6, c(6, :)};
 
 % table for bond sizes/colors
 fb = table();
@@ -61,7 +62,7 @@ try
     for i = 1:4
         txt = fgetl(fid);
     end
-    n = sscanf(txt, "%d %d", [1, 2]);
+    n = sscanf(txt, "%3d%3d", [1, 2]);
     nAtoms = n(1);
     nBonds = n(2);
 
@@ -80,16 +81,17 @@ try
         atom(i) = string(temp{4});
     end
 
-    % read bond start and stop indices
+    % read bond start index, stop index, and bond level
+    % indices are 3-digits, and will run into one another if
+    % there are more than 100 atoms, breaking scanning functions
     idx1 = zeros(nBonds, 1);
     idx2 = zeros(nBonds, 1);
     bond = zeros(nBonds, 1);
     for i = 1:nBonds
-        txt = strtrim(fgetl(fid));
-        temp = textscan(txt, "%d %d %d", 1);
-        idx1(i) = temp{1};
-        idx2(i) = temp{2};
-        bond(i) = temp{3};
+        txt = char(fgetl(fid));
+        idx1(i) = str2double(txt(1:3));
+        idx2(i) = str2double(txt(4:6));
+        bond(i) = str2double(txt(7:9));
     end
 
 catch ME
