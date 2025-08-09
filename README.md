@@ -10,10 +10,13 @@ SDF files contain computed 3D shapes for molecules.
 Files can be obtained from webbook.nist.gov
 
 Download example files using the appropriate script:
-`get_example_files.bat` or `get_example_files.sh`
+  - Windows: `get_example_files.bat`
+  - Linux or Mac: `get_example_files.sh`
+  - Within MATLAB: `get_example_files`, This will work in MATLAB Online
 
 Then plot from within matlab.
-`plotSDF("caffeine.sdf");`
+  - `plotSDF("caffeine.sdf");` to plot a given file
+  - `plotSDF();` to select file using dialog box
 
 ![image of caffeine molecule](caffeine.png)
 
