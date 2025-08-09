@@ -2,7 +2,7 @@
 
 [![Unit_Tests](https://github.com/btmy87/matlabPlotSDF/actions/workflows/testing.yml/badge.svg)](https://github.com/btmy87/matlabPlotSDF/actions/workflows/testing.yml)
 
-[<img src="https://www.mathworks.com/matlabcentral/images/matlab%2Dfile%2Dexchange.svg">](https://www.https://www.mathworks.com/matlabcentral/fileexchange/181749-plotsdf)
+[<img src="https://www.mathworks.com/matlabcentral/images/matlab%2Dfile%2Dexchange.svg">](https://www.mathworks.com/matlabcentral/fileexchange/181749-plotsdf)
 
 Plot 3D SD files in MATLAB.
 

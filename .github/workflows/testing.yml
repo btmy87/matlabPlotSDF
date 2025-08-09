@@ -23,8 +23,6 @@ jobs:
         include:
           - os: windows-latest
             version: R2022b
-          - os: ubuntu-latest
-            version: R2022b
       fail-fast: false
     runs-on: ${{ matrix.os }}
     steps:
