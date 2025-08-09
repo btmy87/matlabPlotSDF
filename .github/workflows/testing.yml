@@ -18,12 +18,12 @@ jobs:
   test:
     strategy:
       matrix:
-        version: [R2025a, R2024b]
-        os: [ubuntu-latest, windows-latest, macos-14]
+        version: [R2025a, R2024b, R2023b]
+        os: [ubuntu-latest, windows-latest, macos-latest]
         include:
           - os: windows-latest
-            version: R2023b
-          - os: windows-latest
+            version: R2022b
+          - os: ubuntu-latest
             version: R2022b
       fail-fast: false
     runs-on: ${{ matrix.os }}
