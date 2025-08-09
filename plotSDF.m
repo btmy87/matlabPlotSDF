@@ -8,11 +8,13 @@ function [hf, ha, hatom, hbond] = plotSDF(filename, opts)
 % Options:
 %  n: number of facets for atom spheres
 %  m: number of facets for bond cylinders
+%  rotateLight: true/false reset light after rotation
 
 arguments
     filename (1, 1) string = ""
     opts.n (1, 1) double {mustBeInteger} = 61;
     opts.m (1, 1) double {mustBeInteger} = 61;
+    opts.rotateLight (1, 1) logical = false;
 end
 
 %% define formats
@@ -36,69 +38,11 @@ fb(1, ["sz", "color"]) = {0.1, [1,1,1]*0.6};
 fb(2, ["sz", "color"]) = {0.2, [1,1,1]*0.4};
 fb(3, ["sz", "color"]) = {0.3, [1,1,1]*0.2};
 
-%% get filename
-if isempty(filename) || filename == ""
-    [tempfile, tempdir] = uigetfile(["*.sdf";"*.*"], ...
-        "Select SDF file", ...
-        MultiSelect="off");
-    if isnumeric(tempfile)
-        fprintf("plotSDF: No file selected.\n");
-        return;
-    end
-    filename = fullfile(tempdir, tempfile);
-end
-
-assert(exist(filename, "file"), ...
-    "plotSDF: file does not exist, %s\n", filename);
-
 %% read file
-fid = fopen(filename);
-assert(fid > 0, ...
-    "plotSDF: error opening file, %s\n", filename);
+[x,y,z,atom,idx1,idx2,bond] = readSDF(filename);
 
-
-try
-    % 4th line has atom and bond counts
-    for i = 1:4
-        txt = fgetl(fid);
-    end
-    n = sscanf(txt, "%3d%3d", [1, 2]);
-    nAtoms = n(1);
-    nBonds = n(2);
-
-    % read atom locations and types
-    x = zeros(nAtoms, 1);
-    y = zeros(nAtoms, 1);
-    z = zeros(nAtoms, 1);
-    atom = strings(nAtoms, 1);
-
-    for i = 1:nAtoms
-        txt = strtrim(fgetl(fid));
-        temp = textscan(txt, "%f %f %f %s", 1);
-        x(i) = temp{1};
-        y(i) = temp{2};
-        z(i) = temp{3};
-        atom(i) = string(temp{4});
-    end
-
-    % read bond start index, stop index, and bond level
-    % indices are 3-digits, and will run into one another if
-    % there are more than 100 atoms, breaking scanning functions
-    idx1 = zeros(nBonds, 1);
-    idx2 = zeros(nBonds, 1);
-    bond = zeros(nBonds, 1);
-    for i = 1:nBonds
-        txt = char(fgetl(fid));
-        idx1(i) = str2double(txt(1:3));
-        idx2(i) = str2double(txt(4:6));
-        bond(i) = str2double(txt(7:9));
-    end
-
-catch ME
-    % try to close file if we error
-    fclose(fid);
-    rethrow(ME);
-end
+nAtoms = length(x);
+nBonds = length(idx1);
 
 %% Plot
 hf = figure;
@@ -155,6 +99,11 @@ axis vis3d
 axis equal
 view(3);
 material("dull");
-camlight("right");
 
+% make camlight rotate with object
+hlight = camlight("right");
+if opts.rotateLight
+    r = rotate3d();
+    r.ActionPostCallback = @(~, ~) camlight(hlight, "right");
+end
 end
